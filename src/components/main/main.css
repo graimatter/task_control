@@ -10,3 +10,17 @@ body, html {
     padding-right: 5px;
     width: 1440px;
 }
+
+.main {
+    display: flex;
+    direction: row;
+}
+
+.work-task {
+    width: 70%;
+}
+
+.new-task {
+    padding-left: 10px;
+    width: 30%;
+}
