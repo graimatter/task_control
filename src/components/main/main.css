@@ -1,0 +1,12 @@
+body, html {
+    margin: 0px;
+    padding: 0px;
+}
+
+.wrapper {
+    margin: 0px auto;
+    padding-top: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    width: 1440px;
+}

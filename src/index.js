@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Main from './components/main'
 
 ReactDOM.render(
-  <h1>hello123</h1>,
+  <Main />,
   document.getElementById('root')
 );
 
