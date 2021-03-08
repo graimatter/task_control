@@ -1,0 +1,9 @@
+.create_task__mod {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.btn__paddings {
+    margin-top: 10px;
+}

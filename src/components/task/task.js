@@ -5,14 +5,16 @@ import But_Save from '../buttons/but_save'
 import './task.css'
 
 export default class Task extends React.Component {
-
-
+    
     render() {
+        let task_style = 'task-item '
+        //{this.props.task.title}
+        //console.log(this.props.task.title)
+        if (this.props.active === true) task_style = 'task-item task_active'
+        return(
 
-        return (
-
-            <div className = 'task-item Default' >
-                <div className='task-title' >Задача 1</div>
+            <div className = {task_style} >
+                <div className='task-title' ></div>
                 <div className='task-time' >15:20:12</div>
                 <div className='task-time' >16:00:41</div>
                 <div className='task-description'>
@@ -30,3 +32,4 @@ export default class Task extends React.Component {
     }
 
 }
+

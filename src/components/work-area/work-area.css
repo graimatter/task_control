@@ -1,0 +1,14 @@
+.work-task {
+    flex: 1;
+    width: 70%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.empty {
+    height: 50px;
+    line-height: 50px;
+    width: 100%;
+    text-align: center;
+}
