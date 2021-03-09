@@ -16,7 +16,10 @@ const TemplateSource = {
 
     beginDrag(props, monitor, component) {
 
-        const item = { title: props.title }
+        const item = {
+            title : props.template.title,
+            id : props.template.id
+        }
         return item
     },
 
@@ -51,7 +54,7 @@ class Task_Template extends React.Component {
 
             <div className='alert alert-dismissible alert-success' isDragging={this.props.isDragging}>
                 <button type='button' className='close' data-dismiss='alert' onClick={this.deleteTemplate}>&times;</button>
-                <strong className='unselectable'>{this.props.title}</strong>
+                <strong className='unselectable'>{this.props.template.title}</strong>
             </div>
 
         )

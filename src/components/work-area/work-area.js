@@ -8,12 +8,12 @@ const TaskTarget = {
 
 
 
-    hover(props, monitor, component){
-        
+    hover(props, monitor, component) {
+
     },
 
-    drop(props, monitor, component){
-
+    drop(props, monitor, component) {
+        props.newTask(monitor.getItem())
     }
 }
 
@@ -30,18 +30,18 @@ function collect(connect, monitor) {
 }
 
 class Work_Area extends React.Component {
-
+    //<Task active={true} />
     render() {
 
         return this.props.connectDropTarget(
             <div className='work-task'>
-                {this.props.isOver && <div className = 'table-warning empty'><strong>{this.props.itemTitle.title}</strong></div>}
-                <Task active={true} />
+                {this.props.isOver && <div className='table-warning empty'><strong>{this.props.itemTitle.title}</strong></div>}
+
                 {this.props.tasks.map((item, index) => {
-                                    return (<Task task={item}/>)
-                                })
+                    return ( <Task task={item} index={index} buttonsHandler={this.props.buttonsHandler}/>)
+                })
                 }
-                
+
             </div>
         )
     }
