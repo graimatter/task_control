@@ -1,7 +1,7 @@
 import React from 'react'
 import './but.css'
 
-export default class But_Save extends React.Component {
+export default class ButSave extends React.Component {
 
 
     save = () => {

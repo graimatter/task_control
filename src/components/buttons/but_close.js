@@ -1,7 +1,7 @@
 import React from 'react'
 import './but.css'
 
-export default class But_Close extends React.Component {
+export default class ButClose extends React.Component {
 
     close = () => {
         this.props.buttonEvent('close')

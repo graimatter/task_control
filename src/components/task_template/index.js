@@ -1,2 +1,2 @@
-import Task_Template from './task_template'
-export default Task_Template
+import TaskTemplate from './task_template'
+export default TaskTemplate

@@ -42,7 +42,7 @@ function collect(connect, monitor) {
     }
 }
 
-class Task_Template extends React.Component {
+class TaskTemplate extends React.Component {
 
     deleteTemplate = () => {
         this.props.deleteHandler(this.props.template_index)
@@ -63,4 +63,4 @@ class Task_Template extends React.Component {
 
 }
 
-export default DragSource(ItemTypes.TASK, TemplateSource, collect)(Task_Template)
+export default DragSource(ItemTypes.TASK, TemplateSource, collect)(TaskTemplate)

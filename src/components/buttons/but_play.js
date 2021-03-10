@@ -1,9 +1,9 @@
 import React from 'react'
 import './but.css'
 
-export default class But_Play extends React.Component {
+export default class ButPlay extends React.Component {
 
-    play = () => {
+    play = (e) => {
         this.props.buttonEvent('play')
     }
 

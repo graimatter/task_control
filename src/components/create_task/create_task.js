@@ -1,4 +1,5 @@
 import React from 'react'
+import AppService from '../../services/app-service'
 import './create_task.css'
 
 export default class Create_Task extends React.Component {
@@ -21,7 +22,9 @@ export default class Create_Task extends React.Component {
     }
 
     newTemplate = () => {
-
+        new AppService('dev').saveTaskTemplate(this.state.template).then((res) => {
+            console.log(res)
+        })
         this.props.createHandler(this.state.template)
         this.setState({
             template: {

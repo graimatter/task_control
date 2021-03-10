@@ -1,7 +1,7 @@
 import React from 'react'
 import './but.css'
 
-export default class But_Pause extends React.Component {
+export default class ButPause extends React.Component {
 
 
     pause = () => {

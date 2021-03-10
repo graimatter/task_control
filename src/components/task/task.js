@@ -1,8 +1,8 @@
 import React from 'react'
-import But_Play from '../buttons/but_play'
-import But_Pause from '../buttons/but_pause'
-import But_Save from '../buttons/but_save'
-import But_Close from '../buttons/but_close'
+import ButPlay from '../buttons/but_play'
+import ButPause from '../buttons/but_pause'
+import ButSave from '../buttons/but_save'
+import ButClose from '../buttons/but_close'
 import './task.css'
 
 export default class Task extends React.Component {
@@ -20,12 +20,16 @@ export default class Task extends React.Component {
     render() {
         let task_style = 'task-item '
         let main_but = ''
+        let close_but = <ButClose buttonEvent={this.clickButton} />
         if (this.props.task.status === 1) {
-            main_but = <But_Play buttonEvent={this.clickButton} />
+            main_but = <ButPlay buttonEvent={this.clickButton} />
         }
         if (this.props.task.status === 2) {
-            main_but = <But_Pause buttonEvent={this.clickButton} />
+            main_but = <ButPause buttonEvent={this.clickButton} />
             task_style = 'task-item task_active'
+        }
+        if (this.props.task.status === 0) {
+            close_but = ''
         }
         return (
 
@@ -39,8 +43,8 @@ export default class Task extends React.Component {
                 <div className='task-buttons' >
 
                     {main_but}
-                    <But_Save buttonEvent={this.clickButton} />
-                    <But_Close buttonEvent={this.clickButton} />
+                    <ButSave buttonEvent={this.clickButton} />
+                    {close_but}
                 </div>
             </div>
         )

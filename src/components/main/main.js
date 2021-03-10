@@ -1,10 +1,10 @@
 import React from 'react'
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import Task_Template from '../task_template'
+import TaskTemplate from '../task_template'
 import Header from '../header'
-import Create_Task from '../create_task'
-import Work_Area from '../work-area'
+import CreateTask from '../create_task'
+import WorkArea from '../work-area'
 import '../../styles/bootstrap.min.css'
 import './main.css'
 
@@ -21,6 +21,13 @@ export default class Main extends React.Component {
     }
 
     pad = function (num) { return ('00' + num).slice(-2) }
+
+    changeActiveStatus = (array) => {
+        if (array.length > 0) {
+            if (array[0].status === 2) return true
+        }
+        return false
+    }
 
     deleteTemplateHander = (index) => {
         const new_templates = this.state.task_templates
@@ -39,32 +46,32 @@ export default class Main extends React.Component {
         newTask.time_start = `${this.pad(curdate.getHours())}:${this.pad(curdate.getMinutes())}:${this.pad(curdate.getSeconds())}`
         newTask.status = 2
         const newTasks = this.state.tasks
-        if (newTasks.length > 0)
+        if (this.changeActiveStatus(newTasks)) {
             newTasks[0].status = 1
-        newTasks.push(newTask) 
+        }
+        newTasks.push(newTask)
         this.setState({ tasks: newTasks.sort((a, b) => b.status - a.status) })
     }
 
     buttonsHandler = (item) => {
-        //console.log(item)
-        const newTasks = this.state.tasks
+        const newTasks = []
+        newTasks.push(...this.state.tasks)
         switch (item.action) {
             case 'pause':
                 newTasks[item.index].status = 1
                 break
             case 'play':
-                newTasks[0].status = 1
+                if (newTasks[0].status === 2)
+                    newTasks[0].status = 1
                 newTasks[item.index].status = 2
                 newTasks.sort((a, b) => b.status - a.status)
-                
-                //console.log(newTasks)
                 break
             case 'close':
                 newTasks[item.index].status = 0
                 newTasks.sort((a, b) => b.status - a.status)
+                break
+            default: break
         }
-        console.log(newTasks)
-        console.log(this.state.tasks)
         this.setState({ tasks: newTasks })
     }
 
@@ -76,13 +83,13 @@ export default class Main extends React.Component {
                 <Header />
                 <DndProvider backend={HTML5Backend}>
                     <div className='main'>
-                        <Work_Area tasks={this.state.tasks} newTask={this.newTaskHandler} buttonsHandler={this.buttonsHandler}/>
+                        <WorkArea tasks={this.state.tasks} newTask={this.newTaskHandler} buttonsHandler={this.buttonsHandler} />
 
                         <div className='new-task'>
-                            <Create_Task createHandler={this.newTemplateHandler} />
+                            <CreateTask createHandler={this.newTemplateHandler} />
                             {
                                 task_templates.map((item, index) => {
-                                    return (<Task_Template template={item} template_index={index} deleteHandler={this.deleteTemplateHander} />)
+                                    return (<TaskTemplate template={item} template_index={index} deleteHandler={this.deleteTemplateHander} />)
                                 })
                             }
                         </div>

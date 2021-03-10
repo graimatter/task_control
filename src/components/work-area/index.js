@@ -1,2 +1,2 @@
-import Work_Area from './work-area'
-export default Work_Area
+import WorkArea from './work-area'
+export default WorkArea

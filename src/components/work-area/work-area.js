@@ -29,7 +29,7 @@ function collect(connect, monitor) {
     }
 }
 
-class Work_Area extends React.Component {
+class WorkArea extends React.Component {
     //<Task active={true} />
     render() {
 
@@ -47,4 +47,4 @@ class Work_Area extends React.Component {
     }
 }
 
-export default DropTarget(ItemTypes.TASK, TaskTarget, collect)(Work_Area)
+export default DropTarget(ItemTypes.TASK, TaskTarget, collect)(WorkArea)

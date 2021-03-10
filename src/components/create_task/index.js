@@ -1,2 +1,2 @@
-import Create_Task from './create_task'
-export default Create_Task
+import CreateTask from './create_task'
+export default CreateTask
