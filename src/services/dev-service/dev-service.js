@@ -10,9 +10,10 @@ export default class DevService {
         return await res.json();
     };
 
-    saveTaskTemplate = async(template) => {
+    saveTaskTemplate = async (template) => {
 
-        let newId = -1
+        let ans = {}
+
         await fetch('http://localhost:3001/createTemplate', {
             method: 'post',
             //mode: 'no-cors',  
@@ -21,41 +22,95 @@ export default class DevService {
             },
             body: JSON.stringify(template)
         })
-            .then(result => result.json())  
+            .then(result => result.json())
             .then(data => {
-                console.log(data)
-                newId = data
-            })  
+                ans = data
+            })
             .catch(function (error) {
-                console.log('Request failed', error);
+                const badRes = {
+                    status: -1,
+                    result: error
+                }
+                ans = badRes
             });
 
-            return newId
+        return ans
 
     }
 
     getTemplates = async () => {
-        const templates = []
+        
+        let ans = {}
 
         await fetch('http://localhost:3001/getAllTask', { method: 'post' })
-        .then(result => result.json())
-        .then(items =>
-        items.forEach((item) => {
-            
-            if (item !== null && item.id) {
+            .then(result => result.json())
+            .then(data => {
+                ans = data
+            })
+            .catch(function (error) {
+                const badRes = {
+                    status: -1,
+                    result: error
+                }
+                ans = badRes
+            });
 
-                templates.push(
-                    {
-                        id: item.id,
-                        title: item.title
-                    }
-                )
+        return ans
+    }
 
-            }
-        }
-        ))
-        console.log(templates)
-        return templates
+    deleteTemplateById = async (templateId) => {
+
+        let ans = {}
+        await fetch('http://localhost:3001/deleteTemplate', {
+            method: 'post',
+            //mode: 'no-cors',  
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({id : templateId})
+        })
+            .then(result => result.json())
+            .then(data => {
+                ans = data
+            })
+            .catch(function (error) {
+                const badRes = {
+                    status: -1,
+                    result: error
+                }
+                ans = badRes
+            });
+
+        return ans
+
+    }
+
+    createNewTask = async (task) => {
+
+        let ans = {}
+
+        await fetch('http://localhost:3001/createNewTask', {
+            method: 'post',
+            //mode: 'no-cors',  
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(task)
+        })
+            .then(result => result.json())
+            .then(data => {
+                ans = data
+            })
+            .catch(function (error) {
+                const badRes = {
+                    status: -1,
+                    result: error
+                }
+                ans = badRes
+            });
+
+        return ans
+
     }
 
     /*getTaskTemplateById = async (id) => {

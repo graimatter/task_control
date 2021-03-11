@@ -14,23 +14,28 @@ export default class AppService {
 
     }
 
-    getTasksTypesList() {
-        return this.appservice.getTasksTypesList()
+   
+
+    saveTaskTemplate(template) {
+        return this.appservice.saveTaskTemplate(template)
     }
 
     getTemplates() {
         return this.appservice.getTemplates()
     }
 
-    getTaskTemplateById(id) {
-        return this.appservice.getTaskTemplateById(id)
-    }
 
-    saveTaskTemplate(template) {
-        return this.appservice.saveTaskTemplate(template)
+    deleteTemplateById(templateId) {
+        return this.appservice.deleteTemplateById(templateId)
     }
 
     createNewTask(task) {
         return this.appservice.createNewTask(task)
     }
+
+    /*********************************************** */
+    getTaskTemplateById(id) {
+        return this.appservice.getTaskTemplateById(id)
+    }
+
 }

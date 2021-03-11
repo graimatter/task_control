@@ -3,8 +3,10 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import TaskTemplate from '../task_template'
 import Header from '../header'
+import Loading from '../loading'
 import CreateTask from '../create_task'
 import WorkArea from '../work-area'
+import AppService from '../../services/app-service'
 import '../../styles/bootstrap.min.css'
 import './main.css'
 
@@ -12,15 +14,26 @@ export default class Main extends React.Component {
 
 
     state = {
-        task_templates: [
-            { id: 1, title: 'Task number one' },
-            { id: 2, title: 'Task number two, this task is very dificult, very very very very' },
-            { id: 3, title: 'Task number three' }
-        ],
-        tasks: []
+        task_templates: [],
+        tasks: [],
+        loaded: false
     }
 
     pad = function (num) { return ('00' + num).slice(-2) }
+
+
+    componentDidMount() {
+        new AppService('dev').getTemplates().then((res) => {
+            console.log(res)
+            if (res.status === 0) {
+                this.setState({
+                    task_templates: res.result,
+                    loaded: true
+                })
+            }
+        }
+        )
+    }
 
     changeActiveStatus = (array) => {
         if (array.length > 0) {
@@ -29,10 +42,13 @@ export default class Main extends React.Component {
         return false
     }
 
-    deleteTemplateHander = (index) => {
-        const new_templates = this.state.task_templates
-        new_templates.splice(index, 1)
-        this.setState({ task_templates: new_templates })
+    deleteTemplateHander = (index, id) => {
+        new AppService('dev').deleteTemplateById(id).then((res) => {
+            const new_templates = this.state.task_templates
+            new_templates.splice(index, 1)
+            this.setState({ task_templates: new_templates })
+        })
+
     }
 
     newTemplateHandler = (template) => {
@@ -77,24 +93,30 @@ export default class Main extends React.Component {
 
     render() {
 
-        const { task_templates } = this.state
+        const { task_templates, loaded } = this.state
+
+        let mainContent = <Loading />
+        if (loaded)
+            mainContent = <DndProvider backend={HTML5Backend}>
+                <div className='main'>
+                    <WorkArea tasks={this.state.tasks} newTask={this.newTaskHandler} buttonsHandler={this.buttonsHandler} />
+
+                    <div className='new-task'>
+                        <CreateTask createHandler={this.newTemplateHandler} />
+                        {
+                            task_templates.map((item, index) => {
+                                return (<TaskTemplate template={item} template_index={index} deleteHandler={this.deleteTemplateHander} />)
+                            })
+                        }
+                    </div>
+                </div>
+            </DndProvider>
+
+
         return (
             <div className='wrapper'>
                 <Header />
-                <DndProvider backend={HTML5Backend}>
-                    <div className='main'>
-                        <WorkArea tasks={this.state.tasks} newTask={this.newTaskHandler} buttonsHandler={this.buttonsHandler} />
-
-                        <div className='new-task'>
-                            <CreateTask createHandler={this.newTemplateHandler} />
-                            {
-                                task_templates.map((item, index) => {
-                                    return (<TaskTemplate template={item} template_index={index} deleteHandler={this.deleteTemplateHander} />)
-                                })
-                            }
-                        </div>
-                    </div>
-                </DndProvider>
+                {mainContent}
             </div>
         )
     }

@@ -45,7 +45,7 @@ function collect(connect, monitor) {
 class TaskTemplate extends React.Component {
 
     deleteTemplate = () => {
-        this.props.deleteHandler(this.props.template_index)
+        this.props.deleteHandler(this.props.template_index, this.props.template.id)
     }
 
     render() {
