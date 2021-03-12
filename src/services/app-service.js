@@ -33,9 +33,8 @@ export default class AppService {
         return this.appservice.createNewTask(task)
     }
 
-    /*********************************************** */
-    getTaskTemplateById(id) {
-        return this.appservice.getTaskTemplateById(id)
+    actionsFromTask(taskinfo) {
+        return this.appservice.actionsFromTask(taskinfo)
     }
 
 }

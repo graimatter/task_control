@@ -113,6 +113,34 @@ export default class DevService {
 
     }
 
+    actionsFromTask  = async (taskinfo) => {
+
+        let ans = {}
+
+        await fetch('http://localhost:3001/controllTask', {
+            method: 'post',
+            //mode: 'no-cors',  
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(taskinfo)
+        })
+            .then(result => result.json())
+            .then(data => {
+                ans = data
+            })
+            .catch(function (error) {
+                const badRes = {
+                    status: -1,
+                    result: error
+                }
+                ans = badRes
+            });
+
+        return ans
+
+    }
+
     /*getTaskTemplateById = async (id) => {
         const templates = []
         await fetch('http://localhost:3001/getTask', {

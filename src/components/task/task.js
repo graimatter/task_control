@@ -13,6 +13,7 @@ export default class Task extends React.Component {
         this.props.buttonsHandler(
             {
                 action: action,
+                id : this.props.task.taskId,
                 index: this.props.index
             }
         )
