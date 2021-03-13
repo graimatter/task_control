@@ -8,12 +8,23 @@ import './task.css'
 export default class Task extends React.Component {
 
 
+    state = {
+        desc : this.props.task.description
+    }
+
+    changeTaskDesc = (e) => {
+        //this.props.changeDesc(e, this.props.index)
+        this.setState({desc : e.target.value})
+        this.props.changeDesc(e.target.value, this.props.index)
+    }
+
     clickButton = (action) => {
-        console.log(this.props.task)
+        console.log(`** ${this.props.task}`)
         this.props.buttonsHandler(
             {
                 action: action,
                 id : this.props.task.taskId,
+                description : this.props.task.description,
                 index: this.props.index
             }
         )
@@ -40,7 +51,7 @@ export default class Task extends React.Component {
                 <div className='task-time' >{this.props.task.time_start}</div>
                 <div className='task-time' >{this.props.task.duration}</div>
                 <div className='task-description'>
-                    <input className='form-control input__mod' placeholder='Описание...' value={this.props.task.description}></input>
+                    <input className='form-control input__mod' placeholder='Описание...' value={this.state.desc} onChange = {this.changeTaskDesc}></input>
                 </div>
                 <div className='task-buttons' >
 

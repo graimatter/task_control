@@ -15,8 +15,7 @@ export default class DevService {
         let ans = {}
 
         await fetch('http://localhost:3001/createTemplate', {
-            method: 'post',
-            //mode: 'no-cors',  
+            method: 'post', 
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -42,7 +41,32 @@ export default class DevService {
         
         let ans = {}
 
-        await fetch('http://localhost:3001/getAllTask', { method: 'post' })
+        await fetch('http://localhost:3001/getAllTemplates', { method: 'post' })
+            .then(result => result.json())
+            .then(data => {
+                ans = data
+            })
+            .catch(function (error) {
+                const badRes = {
+                    status: -1,
+                    result: error
+                }
+                ans = badRes
+            });
+
+        return ans
+    }
+
+    getTasks = async (curDate) => {
+        
+        let ans = {}
+        await fetch('http://localhost:3001/getAllTasks', {
+            method: 'post', 
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({curDate : curDate})
+        })
             .then(result => result.json())
             .then(data => {
                 ans = data
@@ -62,12 +86,37 @@ export default class DevService {
 
         let ans = {}
         await fetch('http://localhost:3001/deleteTemplate', {
-            method: 'post',
-            //mode: 'no-cors',  
+            method: 'post',  
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({id : templateId})
+        })
+            .then(result => result.json())
+            .then(data => {
+                ans = data
+            })
+            .catch(function (error) {
+                const badRes = {
+                    status: -1,
+                    result: error
+                }
+                ans = badRes
+            });
+
+        return ans
+
+    }
+
+    saveDescription = async (taskId) => {
+
+        let ans = {}
+        await fetch('http://localhost:3001/saveDescription', {
+            method: 'post', 
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({id : taskId})
         })
             .then(result => result.json())
             .then(data => {
@@ -91,7 +140,6 @@ export default class DevService {
 
         await fetch('http://localhost:3001/createNewTask', {
             method: 'post',
-            //mode: 'no-cors',  
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -118,8 +166,7 @@ export default class DevService {
         let ans = {}
 
         await fetch('http://localhost:3001/controllTask', {
-            method: 'post',
-            //mode: 'no-cors',  
+            method: 'post', 
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -140,50 +187,6 @@ export default class DevService {
         return ans
 
     }
-
-    /*getTaskTemplateById = async (id) => {
-        const templates = []
-        await fetch('http://localhost:3001/getTask', {
-            method: 'post',  
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({id : id})
-        })
-        .then(result => result.json())
-        .then(items =>
-            items.forEach((item) => {
-                if (item !== null) {
-                    let template = {}
-                    template.task_id = item.task_id
-                    template.element_id = item.element_id
-                    template.field_type = item.TYPE
-                    template.field_name = item.LABEL
-                    template.current_id = -1
-                    template.current_value = ''
-                    template.values =[]
-                    if(item.value !== null){
-                        let ids = item.value_id.split(',')
-                        let keys = item.value.split(',')
-                        for(let i = 0; i < ids.length; i++){
-                            let newitem = {
-                                id : 100+(+ids[i]),
-                                key : keys[i]
-                            }
-                            template.values.push(newitem)
-                        }
-
-                    }
-                    templates.push(template)
-
-                }
-            }
-            )
-        )
-
-        return templates
-    }*/
-
 
 }
 
