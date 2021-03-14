@@ -1,8 +1,6 @@
 import DevService from './dev-service/dev-service.js'
 export default class AppService {
 
-    //appservice = new Object()
-    
     constructor(type){
         
         if(type === 'dev'){

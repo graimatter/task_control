@@ -9,10 +9,10 @@ const TemplateSource = {
       return props.isReady
     },*/
 
-    /*isDragging(props, monitor) {
+    isDragging(props, monitor) {
      
       return monitor.getItem().id === props.template_index
-    },*/
+    },
 
     beginDrag(props, monitor, component) {
 
