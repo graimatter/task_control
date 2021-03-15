@@ -9,7 +9,7 @@ export default class Task extends React.Component {
 
 
     state = {
-        desc : this.props.task.description
+        desc: this.props.task.description
     }
 
     pad = function (num) { return ('00' + num).slice(-2) }
@@ -17,7 +17,6 @@ export default class Task extends React.Component {
     DurationToStr(diffsec) {
 
         let duration = '';
-        //if( isNaN(diffsec) ) return duration
         duration = this.pad(Math.trunc(diffsec / 3600)) + ':';
         diffsec = diffsec - (Math.trunc(diffsec / 3600)) * 3600;
         duration = duration + this.pad(Math.trunc(diffsec / 60)) + ':';
@@ -25,9 +24,16 @@ export default class Task extends React.Component {
         return duration + this.pad(diffsec);
     }
 
+    changeTownHandler = (e) => {
+        
+        const town = this.props.towns.find((item) =>{
+            if (item.town_title === e.target.value) return item
+        })
+        if (town !== undefined) this.props.changeTown( town.id, this.props.index) 
+    }
+
     changeTaskDesc = (e) => {
-        //this.props.changeDesc(e, this.props.index)
-        this.setState({desc : e.target.value})
+        this.setState({ desc: e.target.value })
         this.props.changeDesc(e.target.value, this.props.index)
     }
 
@@ -36,8 +42,9 @@ export default class Task extends React.Component {
         this.props.buttonsHandler(
             {
                 action: action,
-                id : this.props.task.taskId,
-                description : this.props.task.description,
+                id: this.props.task.taskId,
+                description: this.props.task.description,
+                town_id: this.props.task.town_id,
                 index: this.props.index
             }
         )
@@ -66,7 +73,20 @@ export default class Task extends React.Component {
                 <div className='task-time' >{this.props.task.time_start}</div>
                 <div className='task-time' >{task_duration}</div>
                 <div className='task-description'>
-                    <input className='form-control input__mod' placeholder='Описание...' value={this.state.desc} onChange = {this.changeTaskDesc}></input>
+                    <input className='form-control input__mod' placeholder='Описание...' value={this.state.desc} onChange={this.changeTaskDesc}></input>
+                </div>
+                <div className='task-place'>
+                   
+                        <select className='custom-select input__mod' onChange={this.changeTownHandler}>
+
+                            <option value={this.props.task.town_id} selected>{this.props.task.town_title}</option>
+                            {
+                                this.props.towns.map((item, index) => {
+                                    return (item.isfilial === 0 ? <option value={item.town_id}>{item.town_title}</option> : <option className = 'isfilial' value={item.town_id} disabled>{item.town_title}</option>)
+                                })
+                            }
+                        </select>
+
                 </div>
                 <div className='task-buttons' >
 

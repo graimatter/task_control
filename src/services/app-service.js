@@ -26,6 +26,10 @@ export default class AppService {
         return this.appservice.getTasks(curDate)
     }
 
+    getTowns() {
+        return this.appservice.getTowns()
+    }
+
     deleteTemplateById(templateId) {
         return this.appservice.deleteTemplateById(templateId)
     }

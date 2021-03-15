@@ -17,9 +17,18 @@ export default class Main extends React.Component {
     state = {
         task_templates: [],
         tasks: [],
+        towns: [],
         loaded_template: false,
         loaded_tasks: false,
+        loaded_towns: false,
         navDate: new Date()
+    }
+
+    changeTown = (townId, index) => {
+        console.log(townId, index)
+        const newTasks = [...this.state.tasks]
+        newTasks[index].town_id = townId
+        this.setState({tasks : newTasks})
     }
 
     changeDescription = (descValue, index) => {
@@ -59,6 +68,15 @@ export default class Main extends React.Component {
                 this.setState({
                     tasks: res.result,
                     loaded_tasks: true
+                })
+            }
+        })
+        new AppService('dev').getTowns().then((res) => {
+            console.log(res)
+            if (res.status === 0) {
+                this.setState({
+                    towns: res.result,
+                    loaded_towns: true
                 })
             }
         })
@@ -141,7 +159,7 @@ export default class Main extends React.Component {
                 break
 
             case 'save':
-                new AppService('dev').actionsFromTask({ id: item.id, description: item.description, action: 'save' }).then((res) => {
+                new AppService('dev').actionsFromTask({ id: item.id, description: item.description, town_id: item.town_id, action: 'save' }).then((res) => {
                     console.log(res)
                 })
                 break
@@ -165,14 +183,14 @@ export default class Main extends React.Component {
 
     render() {
 
-        const { task_templates, loaded_templates, loaded_tasks, navDate } = this.state
+        const { task_templates, loaded_templates, loaded_tasks, navDate, towns, loaded_towns } = this.state
         const showTemplates = (navDate.getFullYear() === new Date().getFullYear() && navDate.getMonth() === new Date().getMonth() && navDate.getDate() === new Date().getDate())
 
         let mainContent = <Loading />
-        if (loaded_templates && loaded_tasks)
+        if (loaded_templates && loaded_tasks && loaded_towns)
             mainContent = <DndProvider backend={HTML5Backend}>
                 <div className='main'>
-                    <WorkArea tasks={this.state.tasks} newTask={this.newTaskHandler} buttonsHandler={this.buttonsHandler} changeDesc={this.changeDescription} />
+                    <WorkArea tasks={this.state.tasks} towns={this.state.towns} newTask={this.newTaskHandler} buttonsHandler={this.buttonsHandler} changeDesc={this.changeDescription} changeTown={this.changeTown}/>
                     <div className='new-task'>
 
                         <CreateTask createHandler={this.newTemplateHandler} />

@@ -29,6 +29,18 @@
     align-items: center;
 }
 
+.task-place {
+    width: 10%;
+    height: 100%;
+    padding-right: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.isfilial {
+    background-color:burlywood;
+}
+
 .task-buttons {
     width: 180px;
     height: 100%;

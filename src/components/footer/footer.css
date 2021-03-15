@@ -14,3 +14,7 @@
 .margin_mod {
     margin-left: 20px;
 }
+
+.date-title {
+    margin: 0px !important;
+}
