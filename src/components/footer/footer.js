@@ -12,12 +12,18 @@ export default class Footer extends React.Component {
 
     changeStartDate = (date) => {
         this.setState({ startDate: date })
+        this.props.chandeReportDate(date, 'start')
         //this.props.changeDate(date)
     }
 
     changeEndDate = (date) => {
         this.setState({ endDate: date })
+        this.props.chandeReportDate(date, 'end')
         //this.props.changeDate(date)
+    }
+
+    report = () => {
+        this.props.createReport()
     }
 
     render() {
@@ -29,16 +35,16 @@ export default class Footer extends React.Component {
                         <h6 className='date-title'>Отчет с:</h6>
                     </div>
                     <div className='margin_mod'>
-                        <DatePicker customInput={<input type='text' className='form-control'></input>} selected={this.state.startDate} onChange={this.changeStartDate} />
+                        <DatePicker customInput={<input type='text' className='form-control'></input>} selected={this.props.startDate} onChange={this.changeStartDate} />
                     </div>
                     <div className='margin_mod'>
                         <h6 className='date-title'>по:</h6>
                     </div>
                     <div className='margin_mod'>
-                        <DatePicker customInput={<input type='text' className='form-control'></input>} selected={this.state.endDate} onChange={this.changeEndDate} />
+                        <DatePicker customInput={<input type='text' className='form-control'></input>} selected={this.props.endDate} onChange={this.changeEndDate} />
                     </div>
                     <div className='margin_mod'>
-                    <button type="button" class="btn btn-success">сформировать</button>
+                    <button type="button" className='btn btn-success' onClick = {this.report}>сформировать</button>
                     </div>
                 </div>
             </nav>

@@ -77,6 +77,31 @@ export default class DevService {
         return ans
     }
 
+    reportTasksDays = async (dates) => {
+        
+        let ans = {}
+        await fetch('http://localhost:3001/reportTasksDays', {
+            method: 'post', 
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dates)
+        })
+            .then(result => result.json())
+            .then(data => {
+                ans = data
+            })
+            .catch(function (error) {
+                const badRes = {
+                    status: -1,
+                    result: error
+                }
+                ans = badRes
+            });
+
+        return ans
+    }
+
     getTasks = async (curDate) => {
         
         let ans = {}

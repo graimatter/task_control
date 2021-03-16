@@ -8,6 +8,7 @@ import Loading from '../loading'
 import CreateTask from '../create_task'
 import WorkArea from '../work-area'
 import AppService from '../../services/app-service'
+import Report from '../report'
 import '../../styles/bootstrap.min.css'
 import './main.css'
 
@@ -21,7 +22,37 @@ export default class Main extends React.Component {
         loaded_template: false,
         loaded_tasks: false,
         loaded_towns: false,
-        navDate: new Date()
+        navDate: new Date(),
+        reportDateStart: new Date(),
+        reportDateEnd: new Date(),
+        reports: [],
+        loaded_report: false
+    }
+
+    pad = function (num) { return ('00' + num).slice(-2) }
+
+    createReport = ()=> {
+        //console.log(`report for ${this.state.reportDateStart} - ${this.state.reportDateEnd}`)
+        const dateStart = this.state.reportDateStart
+        const dateEnd = this.state.reportDateEnd
+        const dates = {
+            reportDateStart : `${dateStart.getFullYear()}-${this.pad(dateStart.getMonth() + 1)}-${this.pad(dateStart.getDate())} 00:00:00`,
+            reportDateEnd : `${dateEnd.getFullYear()}-${this.pad(dateEnd.getMonth() + 1)}-${this.pad(dateEnd.getDate())} 23:59:59`
+        }
+        new AppService('dev').reportTasksDays(dates).then((res) => {
+            console.log(res)
+            if (res.status === 0) {
+                this.setState({
+                    reports: res.result,
+                    loaded_report: true
+                })
+            }
+        })
+    }
+
+    chandeReportDate = (newDate, startOrend) => {
+        if( startOrend === 'start' ) this.setState({ reportDateStart : newDate})
+        if( startOrend === 'end' ) this.setState({ reportDateEnd : newDate})
     }
 
     changeTown = (townId, index) => {
@@ -37,8 +68,6 @@ export default class Main extends React.Component {
         newTasks[index].description = descValue
         this.setState({ tasks: newTasks })
     }
-
-    pad = function (num) { return ('00' + num).slice(-2) }
 
     DurationToStr(diffsec) {
 
@@ -183,11 +212,11 @@ export default class Main extends React.Component {
 
     render() {
 
-        const { task_templates, loaded_templates, loaded_tasks, navDate, towns, loaded_towns } = this.state
+        const { task_templates, loaded_templates, loaded_tasks, navDate, towns, loaded_towns, loaded_report } = this.state
         const showTemplates = (navDate.getFullYear() === new Date().getFullYear() && navDate.getMonth() === new Date().getMonth() && navDate.getDate() === new Date().getDate())
 
         let mainContent = <Loading />
-        if (loaded_templates && loaded_tasks && loaded_towns)
+        if (!loaded_report && loaded_templates && loaded_tasks && loaded_towns)
             mainContent = <DndProvider backend={HTML5Backend}>
                 <div className='main'>
                     <WorkArea tasks={this.state.tasks} towns={this.state.towns} newTask={this.newTaskHandler} buttonsHandler={this.buttonsHandler} changeDesc={this.changeDescription} changeTown={this.changeTown}/>
@@ -205,12 +234,14 @@ export default class Main extends React.Component {
                 </div>
             </DndProvider>
 
+        if  (loaded_report) 
+            mainContent = <Report />
 
         return (
             <div className='wrapper'>
                 <Header navDate={this.state.navDate} changeDate={this.changeDate} />
                 {mainContent}
-                <Footer />
+                <Footer chandeReportDate = {this.chandeReportDate} startDate = {this.state.reportDateStart} endDate = {this.state.reportDateEnd} createReport = {this.createReport}/>
             </div>
         )
     }

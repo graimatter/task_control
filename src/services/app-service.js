@@ -42,4 +42,8 @@ export default class AppService {
         return this.appservice.actionsFromTask(taskinfo)
     }
 
+    reportTasksDays(dates) {
+        return this.appservice.reportTasksDays(dates)
+    }
+
 }

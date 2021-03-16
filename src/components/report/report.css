@@ -1,0 +1,8 @@
+.report {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    height: 200px;
+    flex: 1;
+    margin-bottom: 10px !important;
+}

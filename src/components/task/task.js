@@ -33,7 +33,7 @@ export default class Task extends React.Component {
     }
 
     changeTaskDesc = (e) => {
-        this.setState({ desc: e.target.value })
+        //this.setState({ desc: e.target.value })
         this.props.changeDesc(e.target.value, this.props.index)
     }
 
@@ -73,7 +73,7 @@ export default class Task extends React.Component {
                 <div className='task-time' >{this.props.task.time_start}</div>
                 <div className='task-time' >{task_duration}</div>
                 <div className='task-description'>
-                    <input className='form-control input__mod' placeholder='Описание...' value={this.state.desc} onChange={this.changeTaskDesc}></input>
+                    <input className='form-control input__mod' placeholder='Описание...' value={this.props.task.description} onChange={this.changeTaskDesc}></input>
                 </div>
                 <div className='task-place'>
                    
