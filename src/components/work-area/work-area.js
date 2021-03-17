@@ -37,7 +37,7 @@ class WorkArea extends React.Component {
                 {this.props.isOver && <div className='table-warning empty'><strong>{this.props.itemTitle.title}</strong></div>}
 
                 {this.props.tasks.map((item, index) => {
-                    return ( <Task task={item} key={index} index={index} towns={this.props.towns} buttonsHandler={this.props.buttonsHandler} changeDesc = {this.props.changeDesc} changeTown={this.props.changeTown}/>)
+                    return ( <Task task={item} key={index} index={index} towns={this.props.towns} buttonsHandler={this.props.buttonsHandler} changeDesc = {this.props.changeDesc} changeTown={this.props.changeTown} isCurDate = {this.props.isCurDate}/>)
                 })
                 }
 

@@ -26,6 +26,10 @@ export default class Footer extends React.Component {
         this.props.createReport()
     }
 
+    closeHanler = () => {
+        this.props.closeReport()
+    }
+
     render() {
 
         return (
@@ -44,8 +48,13 @@ export default class Footer extends React.Component {
                         <DatePicker customInput={<input type='text' className='form-control'></input>} selected={this.props.endDate} onChange={this.changeEndDate} />
                     </div>
                     <div className='margin_mod'>
-                    <button type="button" className='btn btn-success' onClick = {this.report}>сформировать</button>
+                        <button type="button" className='btn btn-secondary' onClick={this.report}>Сформировать</button>
                     </div>
+                    {this.props.reportStat &&
+                        <div className='margin_mod'>
+                            <button type="button" className='btn btn-warning' onClick={this.closeHanler}>Закрыть</button>
+                        </div>
+                    }
                 </div>
             </nav>
         )

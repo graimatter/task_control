@@ -20,7 +20,7 @@ export default class Header extends React.Component {
 
             <nav className='navbar navbar-expand-lg navbar-dark bg-primary header'>
                 <div className='navDate'>
-                    <DatePicker customInput = {<input type="text" className='form-control'></input>} selected={this.state.navDate} onChange={this.changeDate}/>
+                    <DatePicker customInput = {<input type='text' className='form-control'></input>} selected={this.state.navDate} onChange={this.changeDate}/>
                 </div>
             </nav>
 

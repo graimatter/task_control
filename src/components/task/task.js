@@ -8,9 +8,9 @@ import './task.css'
 export default class Task extends React.Component {
 
 
-    state = {
+    /*state = {
         desc: this.props.task.description
-    }
+    }*/
 
     pad = function (num) { return ('00' + num).slice(-2) }
 
@@ -25,11 +25,11 @@ export default class Task extends React.Component {
     }
 
     changeTownHandler = (e) => {
-        
-        const town = this.props.towns.find((item) =>{
+
+        const town = this.props.towns.find((item) => {
             if (item.town_title === e.target.value) return item
         })
-        if (town !== undefined) this.props.changeTown( town.id, this.props.index) 
+        if (town !== undefined) this.props.changeTown(town.id, this.props.index)
     }
 
     changeTaskDesc = (e) => {
@@ -38,7 +38,7 @@ export default class Task extends React.Component {
     }
 
     clickButton = (action) => {
-        console.log(`** ${this.props.task}`)
+        //console.log(`** ${this.props.task}`)
         this.props.buttonsHandler(
             {
                 action: action,
@@ -76,23 +76,27 @@ export default class Task extends React.Component {
                     <input className='form-control input__mod' placeholder='Описание...' value={this.props.task.description} onChange={this.changeTaskDesc}></input>
                 </div>
                 <div className='task-place'>
-                   
-                        <select className='custom-select input__mod' onChange={this.changeTownHandler}>
 
-                            <option value={this.props.task.town_id} selected>{this.props.task.town_title}</option>
-                            {
-                                this.props.towns.map((item, index) => {
-                                    return (item.isfilial === 0 ? <option value={item.town_id}>{item.town_title}</option> : <option className = 'isfilial' value={item.town_id} disabled>{item.town_title}</option>)
-                                })
-                            }
-                        </select>
+                    <select className='custom-select input__mod' onChange={this.changeTownHandler}>
+
+                        {
+                        this.props.task.town_id > 0 ?
+                            <option value={this.props.task.town_id} selected>{this.props.task.town_title}</option>:
+                            <option disabled selected>Не выбран участок...</option>
+                        }
+                        {
+                            this.props.towns.map((item, index) => {
+                                return (item.isfilial === 0 ? <option value={item.town_id}>{item.town_title}</option> : <option className='isfilial' value={item.town_id} disabled>{item.town_title}</option>)
+                            })
+                        }
+                    </select>
 
                 </div>
                 <div className='task-buttons' >
 
-                    {main_but}
+                    {this.props.isCurDate && main_but}
                     <ButSave buttonEvent={this.clickButton} />
-                    {close_but}
+                    {this.props.isCurDate && close_but}
                 </div>
             </div>
         )

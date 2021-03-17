@@ -31,6 +31,10 @@ export default class Main extends React.Component {
 
     pad = function (num) { return ('00' + num).slice(-2) }
 
+    closeReport = () => {
+        this.setState({loaded_report : false})
+    }
+
     createReport = ()=> {
         //console.log(`report for ${this.state.reportDateStart} - ${this.state.reportDateEnd}`)
         const dateStart = this.state.reportDateStart
@@ -91,7 +95,7 @@ export default class Main extends React.Component {
                 })
             }
         })
-        new AppService('dev').getTasks(curdatestrFull).then((res) => {
+        new AppService('dev').getTasks({curDate : curdatestrFull}).then((res) => {
             console.log(res)
             if (res.status === 0) {
                 this.setState({
@@ -141,6 +145,8 @@ export default class Main extends React.Component {
             newTask.time_start = `${this.pad(curdate.getHours())}:${this.pad(curdate.getMinutes())}:${this.pad(curdate.getSeconds())}`
             newTask.status = 2
             newTask.taskId = res.result
+            newTask.description = ''
+            //newTask.town_id = -1
             const newTasks = [...this.state.tasks]
             if (this.existsActiveTask(newTasks)) {
                 newTasks[0].status = 1
@@ -189,7 +195,11 @@ export default class Main extends React.Component {
 
             case 'save':
                 new AppService('dev').actionsFromTask({ id: item.id, description: item.description, town_id: item.town_id, action: 'save' }).then((res) => {
-                    console.log(res)
+                    //console.log(res)
+                    newTasks[item.index].town_id = item.town_id
+                    newTasks[item.index].description = item.description
+                    //newTasks.sort((a, b) => b.status - a.status)
+                    this.setState({ tasks: newTasks })
                 })
                 break
             default: break
@@ -199,12 +209,13 @@ export default class Main extends React.Component {
 
     changeDate = (date) => {
         const curdatestrFull = `${date.getFullYear()}-${this.pad(date.getMonth() + 1)}-${this.pad(date.getDate())} ${this.pad(date.getHours())}:${this.pad(date.getMinutes())}:${this.pad(date.getSeconds())}`;
-        new AppService('dev').getTasks(curdatestrFull).then((res) => {
+        new AppService('dev').getTasks({curDate : curdatestrFull}).then((res) => {
             console.log(res)
             if (res.status === 0) {
                 this.setState({
                     navDate: date,
-                    tasks: res.result
+                    tasks: res.result,
+                    loaded_report: false
                 })
             }
         })
@@ -212,19 +223,19 @@ export default class Main extends React.Component {
 
     render() {
 
-        const { task_templates, loaded_templates, loaded_tasks, navDate, towns, loaded_towns, loaded_report } = this.state
-        const showTemplates = (navDate.getFullYear() === new Date().getFullYear() && navDate.getMonth() === new Date().getMonth() && navDate.getDate() === new Date().getDate())
+        const { task_templates, loaded_templates, loaded_tasks, navDate, towns, loaded_towns, loaded_report, reports, reportDateStart, reportDateEnd } = this.state
+        const isCurDate = (navDate.getFullYear() === new Date().getFullYear() && navDate.getMonth() === new Date().getMonth() && navDate.getDate() === new Date().getDate())
 
         let mainContent = <Loading />
         if (!loaded_report && loaded_templates && loaded_tasks && loaded_towns)
             mainContent = <DndProvider backend={HTML5Backend}>
                 <div className='main'>
-                    <WorkArea tasks={this.state.tasks} towns={this.state.towns} newTask={this.newTaskHandler} buttonsHandler={this.buttonsHandler} changeDesc={this.changeDescription} changeTown={this.changeTown}/>
+                    <WorkArea tasks={this.state.tasks} towns={towns} newTask={this.newTaskHandler} buttonsHandler={this.buttonsHandler} changeDesc={this.changeDescription} changeTown={this.changeTown} isCurDate = {isCurDate}/>
                     <div className='new-task'>
 
                         <CreateTask createHandler={this.newTemplateHandler} />
                         <div className='template-list'>
-                            {showTemplates &&
+                            {isCurDate &&
                                 task_templates.map((item, index) => {
                                     return (<TaskTemplate key={index} template={item} template_index={index} deleteHandler={this.deleteTemplateHander} />)
                                 })
@@ -235,13 +246,13 @@ export default class Main extends React.Component {
             </DndProvider>
 
         if  (loaded_report) 
-            mainContent = <Report />
+            mainContent = <Report rows = {reports} />
 
         return (
             <div className='wrapper'>
                 <Header navDate={this.state.navDate} changeDate={this.changeDate} />
                 {mainContent}
-                <Footer chandeReportDate = {this.chandeReportDate} startDate = {this.state.reportDateStart} endDate = {this.state.reportDateEnd} createReport = {this.createReport}/>
+                <Footer chandeReportDate = {this.chandeReportDate} startDate = {reportDateStart} endDate = {reportDateEnd} createReport = {this.createReport} closeReport = {this.closeReport} reportStat = {loaded_report}/>
             </div>
         )
     }

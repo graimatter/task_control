@@ -1,25 +1,16 @@
 export default class DevService {
 
 
-    getDataFromURL = async (url) => {
-
-        const res = await fetch(url);
-        if (!res.ok) {
-            throw new Error(`Could not get data from ${url}, ${res.status}`);
-        }
-        return await res.json();
-    };
-
-    saveTaskTemplate = async (template) => {
+    getDataFromURL = async (url, inputdata) => {
 
         let ans = {}
 
-        await fetch('http://localhost:3001/createTemplate', {
+        await fetch(url, {
             method: 'post', 
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(template)
+            body: JSON.stringify(inputdata)
         })
             .then(result => result.json())
             .then(data => {
@@ -34,100 +25,39 @@ export default class DevService {
             });
 
         return ans
+    };
+
+    saveTaskTemplate = async (template) => {
+
+        return await this.getDataFromURL('http://localhost:3001/createTemplate', template)
 
     }
 
     getTemplates = async () => {
         
-        let ans = {}
-
-        await fetch('http://localhost:3001/getAllTemplates', { method: 'post' })
-            .then(result => result.json())
-            .then(data => {
-                ans = data
-            })
-            .catch(function (error) {
-                const badRes = {
-                    status: -1,
-                    result: error
-                }
-                ans = badRes
-            });
-
-        return ans
+        return await this.getDataFromURL('http://localhost:3001/getAllTemplates')
+        
     }
 
     getTowns = async () => {
+
+        return await this.getDataFromURL('http://localhost:3001/getAllTowns')
         
-        let ans = {}
-
-        await fetch('http://localhost:3001/getAllTowns', { method: 'post' })
-            .then(result => result.json())
-            .then(data => {
-                ans = data
-            })
-            .catch(function (error) {
-                const badRes = {
-                    status: -1,
-                    result: error
-                }
-                ans = badRes
-            });
-
-        return ans
     }
 
     reportTasksDays = async (dates) => {
-        
-        let ans = {}
-        await fetch('http://localhost:3001/reportTasksDays', {
-            method: 'post', 
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dates)
-        })
-            .then(result => result.json())
-            .then(data => {
-                ans = data
-            })
-            .catch(function (error) {
-                const badRes = {
-                    status: -1,
-                    result: error
-                }
-                ans = badRes
-            });
 
-        return ans
+        return await this.getDataFromURL('http://localhost:3001/reportTasksDays', dates)
+        
     }
 
     getTasks = async (curDate) => {
         
-        let ans = {}
-        await fetch('http://localhost:3001/getAllTasks', {
-            method: 'post', 
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({curDate : curDate})
-        })
-            .then(result => result.json())
-            .then(data => {
-                ans = data
-            })
-            .catch(function (error) {
-                const badRes = {
-                    status: -1,
-                    result: error
-                }
-                ans = badRes
-            });
-
-        return ans
+        return await this.getDataFromURL('http://localhost:3001/getAllTasks', curDate)
+        
     }
 
-    deleteTemplateById = async (templateId) => {
+    /*deleteTemplateById = async (templateId) => {
 
         let ans = {}
         await fetch('http://localhost:3001/deleteTemplate', {
@@ -177,11 +107,13 @@ export default class DevService {
 
         return ans
 
-    }
+    }*/
 
     createNewTask = async (task) => {
 
-        let ans = {}
+        return await this.getDataFromURL('http://localhost:3001/createNewTask', task)
+
+        /*let ans = {}
 
         await fetch('http://localhost:3001/createNewTask', {
             method: 'post',
@@ -202,13 +134,15 @@ export default class DevService {
                 ans = badRes
             });
 
-        return ans
+        return ans*/
 
     }
 
     actionsFromTask  = async (taskinfo) => {
 
-        let ans = {}
+        return await this.getDataFromURL('http://localhost:3001/controllTask', taskinfo)
+
+        /*let ans = {}
 
         await fetch('http://localhost:3001/controllTask', {
             method: 'post', 
@@ -229,7 +163,7 @@ export default class DevService {
                 ans = badRes
             });
 
-        return ans
+        return ans*/
 
     }
 
