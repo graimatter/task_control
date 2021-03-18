@@ -70,3 +70,8 @@
     outline: none !important;
     border: none !important;
 }
+
+.not__choose {
+    border: 2px solid rgb(175, 105, 105) !important;
+    outline: none !important;
+}

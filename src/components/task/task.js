@@ -25,20 +25,16 @@ export default class Task extends React.Component {
     }
 
     changeTownHandler = (e) => {
-
-        const town = this.props.towns.find((item) => {
-            if (item.town_title === e.target.value) return item
+        this.props.towns.find((item) => {
+            if (item.town_title === e.target.value) this.props.changeTown(item.id, this.props.index, item.town_title)
         })
-        if (town !== undefined) this.props.changeTown(town.id, this.props.index)
     }
 
     changeTaskDesc = (e) => {
-        //this.setState({ desc: e.target.value })
         this.props.changeDesc(e.target.value, this.props.index)
     }
 
     clickButton = (action) => {
-        //console.log(`** ${this.props.task}`)
         this.props.buttonsHandler(
             {
                 action: action,
@@ -66,6 +62,14 @@ export default class Task extends React.Component {
         if (this.props.task.status === 0) {
             close_but = ''
         }
+
+        console.log(`${this.props.task.town_id}  ${this.props.task.town_title}`)
+
+        let selectValue = this.props.task.town_title || 'Не выбран участок...'
+
+        let colorForSelect = 'form-control input__mod'
+        if (this.props.task.town_id === -1) colorForSelect = 'form-control input__mod not__choose'
+
         return (
 
             <div className={task_style} >
@@ -77,16 +81,11 @@ export default class Task extends React.Component {
                 </div>
                 <div className='task-place'>
 
-                    <select className='custom-select input__mod' onChange={this.changeTownHandler}>
-
-                        {
-                        this.props.task.town_id > 0 ?
-                            <option value={this.props.task.town_id} selected>{this.props.task.town_title}</option>:
-                            <option disabled selected>Не выбран участок...</option>
-                        }
+                    <select className={colorForSelect} value={selectValue} onChange={this.changeTownHandler}>
+                        <option disabled selected>Не выбран участок...</option>
                         {
                             this.props.towns.map((item, index) => {
-                                return (item.isfilial === 0 ? <option value={item.town_id}>{item.town_title}</option> : <option className='isfilial' value={item.town_id} disabled>{item.town_title}</option>)
+                                return (item.isfilial === 0 ? <option >{item.town_title}</option> : <option className='isfilial' disabled>{item.town_title}</option>)
                             })
                         }
                     </select>

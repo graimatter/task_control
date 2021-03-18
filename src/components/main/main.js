@@ -59,10 +59,11 @@ export default class Main extends React.Component {
         if( startOrend === 'end' ) this.setState({ reportDateEnd : newDate})
     }
 
-    changeTown = (townId, index) => {
+    changeTown = (townId, index, town_title) => {
         console.log(townId, index)
         const newTasks = [...this.state.tasks]
         newTasks[index].town_id = townId
+        newTasks[index].town_title = town_title
         this.setState({tasks : newTasks})
     }
 
@@ -87,7 +88,7 @@ export default class Main extends React.Component {
         const curdate = this.state.navDate
         const curdatestrFull = `${curdate.getFullYear()}-${this.pad(curdate.getMonth() + 1)}-${this.pad(curdate.getDate())} ${this.pad(curdate.getHours())}:${this.pad(curdate.getMinutes())}:${this.pad(curdate.getSeconds())}`;
         new AppService('dev').getTemplates().then((res) => {
-            console.log(res)
+            //console.log(res)
             if (res.status === 0) {
                 this.setState({
                     task_templates: res.result,
@@ -96,7 +97,7 @@ export default class Main extends React.Component {
             }
         })
         new AppService('dev').getTasks({curDate : curdatestrFull}).then((res) => {
-            console.log(res)
+            //console.log(res)
             if (res.status === 0) {
                 this.setState({
                     tasks: res.result,
@@ -105,7 +106,7 @@ export default class Main extends React.Component {
             }
         })
         new AppService('dev').getTowns().then((res) => {
-            console.log(res)
+            //console.log(res)
             if (res.status === 0) {
                 this.setState({
                     towns: res.result,
@@ -139,14 +140,14 @@ export default class Main extends React.Component {
 
     newTaskHandler = (newTask) => {
         const curdate = new Date()
-        console.log(this.state.tasks)
         const curdatestrFull = `${curdate.getFullYear()}-${this.pad(curdate.getMonth() + 1)}-${this.pad(curdate.getDate())} ${this.pad(curdate.getHours())}:${this.pad(curdate.getMinutes())}:${this.pad(curdate.getSeconds())}`;
         new AppService('dev').createNewTask({ id: newTask.id, datestart: curdatestrFull }).then((res) => {
             newTask.time_start = `${this.pad(curdate.getHours())}:${this.pad(curdate.getMinutes())}:${this.pad(curdate.getSeconds())}`
             newTask.status = 2
             newTask.taskId = res.result
             newTask.description = ''
-            //newTask.town_id = -1
+            newTask.town_id = -1
+            newTask.town_title = null
             const newTasks = [...this.state.tasks]
             if (this.existsActiveTask(newTasks)) {
                 newTasks[0].status = 1
@@ -195,11 +196,11 @@ export default class Main extends React.Component {
 
             case 'save':
                 new AppService('dev').actionsFromTask({ id: item.id, description: item.description, town_id: item.town_id, action: 'save' }).then((res) => {
-                    //console.log(res)
-                    newTasks[item.index].town_id = item.town_id
-                    newTasks[item.index].description = item.description
+                    console.log(res)
+                    //newTasks[item.index].town_id = item.town_id
+                    //newTasks[item.index].description = item.description
                     //newTasks.sort((a, b) => b.status - a.status)
-                    this.setState({ tasks: newTasks })
+                    //this.setState({ tasks: newTasks })
                 })
                 break
             default: break

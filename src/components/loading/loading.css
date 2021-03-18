@@ -1,7 +1,10 @@
 .load {
+    margin-top: 10px;
+    margin-bottom: 10px !important;
     height : 100px;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex: 1;
 }
