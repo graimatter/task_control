@@ -9,6 +9,7 @@ import CreateTask from '../create_task'
 import WorkArea from '../work-area'
 import AppService from '../../services/app-service'
 import Report from '../report'
+import Authorization from '../authorization'
 import '../../styles/bootstrap.min.css'
 import './main.css'
 
@@ -26,22 +27,33 @@ export default class Main extends React.Component {
         reportDateStart: new Date(),
         reportDateEnd: new Date(),
         reports: [],
-        loaded_report: false
+        loaded_report: false,
+        isAutorizated: false
     }
 
     pad = function (num) { return ('00' + num).slice(-2) }
 
     closeReport = () => {
-        this.setState({loaded_report : false})
+        this.setState({ loaded_report: false })
     }
 
-    createReport = ()=> {
+
+    authorizate = (data) => {
+        console.log(data)
+        new AppService('dev').authorization(data).then((res) => {
+            console.log(`*** ${res} ***`)
+            this.setState({ isAutorizated: true })
+            this.loadMainContent()
+        })
+    }
+
+    createReport = () => {
         //console.log(`report for ${this.state.reportDateStart} - ${this.state.reportDateEnd}`)
         const dateStart = this.state.reportDateStart
         const dateEnd = this.state.reportDateEnd
         const dates = {
-            reportDateStart : `${dateStart.getFullYear()}-${this.pad(dateStart.getMonth() + 1)}-${this.pad(dateStart.getDate())} 00:00:00`,
-            reportDateEnd : `${dateEnd.getFullYear()}-${this.pad(dateEnd.getMonth() + 1)}-${this.pad(dateEnd.getDate())} 23:59:59`
+            reportDateStart: `${dateStart.getFullYear()}-${this.pad(dateStart.getMonth() + 1)}-${this.pad(dateStart.getDate())} 00:00:00`,
+            reportDateEnd: `${dateEnd.getFullYear()}-${this.pad(dateEnd.getMonth() + 1)}-${this.pad(dateEnd.getDate())} 23:59:59`
         }
         new AppService('dev').reportTasksDays(dates).then((res) => {
             console.log(res)
@@ -55,8 +67,8 @@ export default class Main extends React.Component {
     }
 
     chandeReportDate = (newDate, startOrend) => {
-        if( startOrend === 'start' ) this.setState({ reportDateStart : newDate})
-        if( startOrend === 'end' ) this.setState({ reportDateEnd : newDate})
+        if (startOrend === 'start') this.setState({ reportDateStart: newDate })
+        if (startOrend === 'end') this.setState({ reportDateEnd: newDate })
     }
 
     changeTown = (townId, index, town_title) => {
@@ -64,7 +76,7 @@ export default class Main extends React.Component {
         const newTasks = [...this.state.tasks]
         newTasks[index].town_id = townId
         newTasks[index].town_title = town_title
-        this.setState({tasks : newTasks})
+        this.setState({ tasks: newTasks })
     }
 
     changeDescription = (descValue, index) => {
@@ -84,36 +96,53 @@ export default class Main extends React.Component {
         return duration + this.pad(diffsec);
     }
 
+    loadMainContent = () => {
+        const { navDate, isAutorizated } = this.state
+        const curdatestrFull = `${navDate.getFullYear()}-${this.pad(navDate.getMonth() + 1)}-${this.pad(navDate.getDate())} ${this.pad(navDate.getHours())}:${this.pad(navDate.getMinutes())}:${this.pad(navDate.getSeconds())}`;
+        if (isAutorizated) {
+            new AppService('dev').getTemplates().then((res) => {
+                console.log(res)
+                if (res.status === 0) {
+                    this.setState({
+                        task_templates: res.result,
+                        loaded_templates: true
+                    })
+                }
+                else if (res.status === -2) {
+                    this.setState({ isAutorizated: false })
+                }
+            })
+
+            new AppService('dev').getTasks({ navDate: curdatestrFull }).then((res) => {
+                console.log(res)
+                if (res.status === 0) {
+                    this.setState({
+                        tasks: res.result,
+                        loaded_tasks: true
+                    })
+                }
+                else if (res.status === -2) {
+                    this.setState({ isAutorizated: false })
+                }
+            })
+
+            new AppService('dev').getTowns().then((res) => {
+                console.log(res)
+                if (res.status === 0) {
+                    this.setState({
+                        towns: res.result,
+                        loaded_towns: true
+                    })
+                }
+                else if (res.status === -2) {
+                    this.setState({ isAutorizated: false })
+                }
+            })
+        }
+    }
+
     componentDidMount() {
-        const curdate = this.state.navDate
-        const curdatestrFull = `${curdate.getFullYear()}-${this.pad(curdate.getMonth() + 1)}-${this.pad(curdate.getDate())} ${this.pad(curdate.getHours())}:${this.pad(curdate.getMinutes())}:${this.pad(curdate.getSeconds())}`;
-        new AppService('dev').getTemplates().then((res) => {
-            //console.log(res)
-            if (res.status === 0) {
-                this.setState({
-                    task_templates: res.result,
-                    loaded_templates: true
-                })
-            }
-        })
-        new AppService('dev').getTasks({curDate : curdatestrFull}).then((res) => {
-            //console.log(res)
-            if (res.status === 0) {
-                this.setState({
-                    tasks: res.result,
-                    loaded_tasks: true
-                })
-            }
-        })
-        new AppService('dev').getTowns().then((res) => {
-            //console.log(res)
-            if (res.status === 0) {
-                this.setState({
-                    towns: res.result,
-                    loaded_towns: true
-                })
-            }
-        })
+        this.loadMainContent()
     }
 
     existsActiveTask = (array) => {
@@ -210,7 +239,7 @@ export default class Main extends React.Component {
 
     changeDate = (date) => {
         const curdatestrFull = `${date.getFullYear()}-${this.pad(date.getMonth() + 1)}-${this.pad(date.getDate())} ${this.pad(date.getHours())}:${this.pad(date.getMinutes())}:${this.pad(date.getSeconds())}`;
-        new AppService('dev').getTasks({curDate : curdatestrFull}).then((res) => {
+        new AppService('dev').getTasks({ curDate: curdatestrFull }).then((res) => {
             console.log(res)
             if (res.status === 0) {
                 this.setState({
@@ -224,14 +253,13 @@ export default class Main extends React.Component {
 
     render() {
 
-        const { task_templates, loaded_templates, loaded_tasks, navDate, towns, loaded_towns, loaded_report, reports, reportDateStart, reportDateEnd } = this.state
+        const { task_templates, loaded_templates, loaded_tasks, navDate, towns, loaded_towns, loaded_report, reports, reportDateStart, reportDateEnd, isAutorizated } = this.state
         const isCurDate = (navDate.getFullYear() === new Date().getFullYear() && navDate.getMonth() === new Date().getMonth() && navDate.getDate() === new Date().getDate())
-
         let mainContent = <Loading />
         if (!loaded_report && loaded_templates && loaded_tasks && loaded_towns)
             mainContent = <DndProvider backend={HTML5Backend}>
                 <div className='main'>
-                    <WorkArea tasks={this.state.tasks} towns={towns} newTask={this.newTaskHandler} buttonsHandler={this.buttonsHandler} changeDesc={this.changeDescription} changeTown={this.changeTown} isCurDate = {isCurDate}/>
+                    <WorkArea tasks={this.state.tasks} towns={towns} newTask={this.newTaskHandler} buttonsHandler={this.buttonsHandler} changeDesc={this.changeDescription} changeTown={this.changeTown} isCurDate={isCurDate} />
                     <div className='new-task'>
 
                         <CreateTask createHandler={this.newTemplateHandler} />
@@ -246,14 +274,15 @@ export default class Main extends React.Component {
                 </div>
             </DndProvider>
 
-        if  (loaded_report) 
-            mainContent = <Report rows = {reports} />
+        if (loaded_report)
+            mainContent = <Report rows={reports} />
 
         return (
             <div className='wrapper'>
-                <Header navDate={this.state.navDate} changeDate={this.changeDate} />
-                {mainContent}
-                <Footer chandeReportDate = {this.chandeReportDate} startDate = {reportDateStart} endDate = {reportDateEnd} createReport = {this.createReport} closeReport = {this.closeReport} reportStat = {loaded_report}/>
+                {!isAutorizated && <Authorization authHandler = {this.authorizate}/>}
+                {isAutorizated && <Header navDate={this.state.navDate} changeDate={this.changeDate} />}
+                {isAutorizated && mainContent}
+                {isAutorizated && <Footer chandeReportDate={this.chandeReportDate} startDate={reportDateStart} endDate={reportDateEnd} createReport={this.createReport} closeReport={this.closeReport} reportStat={loaded_report} />}
             </div>
         )
     }

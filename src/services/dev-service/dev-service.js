@@ -1,15 +1,22 @@
 export default class DevService {
 
 
-    getDataFromURL = async (url, inputdata) => {
+    getDataFromURL = async (url, inputdata , auth = false, token = '') => {
 
         let ans = {}
-
-        await fetch(url, {
-            method: 'post', 
-            headers: {
+        let headers = {
+            'Content-Type': 'application/json'
+        }
+        if (auth) {
+            headers = {
+                'authorization': 'Basic ' + token,
                 'Content-Type': 'application/json'
-            },
+            }
+        }
+        await fetch(url, {
+            method: 'post',
+            credentials: 'include',
+            headers: headers,
             body: JSON.stringify(inputdata)
         })
             .then(result => result.json())
@@ -27,6 +34,12 @@ export default class DevService {
         return ans
     };
 
+    authorization = async (data) => {
+
+        return await this.getDataFromURL('http://localhost:3001/login', {}, true, data)
+
+    }
+
     saveTaskTemplate = async (template) => {
 
         return await this.getDataFromURL('http://localhost:3001/createTemplate', template)
@@ -34,27 +47,27 @@ export default class DevService {
     }
 
     getTemplates = async () => {
-        
+
         return await this.getDataFromURL('http://localhost:3001/getAllTemplates')
-        
+
     }
 
     getTowns = async () => {
 
         return await this.getDataFromURL('http://localhost:3001/getAllTowns')
-        
+
     }
 
     reportTasksDays = async (dates) => {
 
         return await this.getDataFromURL('http://localhost:3001/reportTasksDays', dates)
-        
+
     }
 
     getTasks = async (curDate) => {
-        
+
         return await this.getDataFromURL('http://localhost:3001/getAllTasks', curDate)
-        
+
     }
 
     /*deleteTemplateById = async (templateId) => {
@@ -138,7 +151,7 @@ export default class DevService {
 
     }
 
-    actionsFromTask  = async (taskinfo) => {
+    actionsFromTask = async (taskinfo) => {
 
         return await this.getDataFromURL('http://localhost:3001/controllTask', taskinfo)
 

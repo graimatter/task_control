@@ -46,4 +46,8 @@ export default class AppService {
         return this.appservice.reportTasksDays(dates)
     }
 
+    authorization(data) {
+        return this.appservice.authorization(data)
+    }
+
 }

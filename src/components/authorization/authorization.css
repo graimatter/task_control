@@ -1,0 +1,17 @@
+.toast__mod {
+    flex-basis: 270px !important;
+}
+
+.form__mod {
+    width: 300px !important;
+}
+
+.enter {
+    width: 100px !important;
+    height: 35px !important;
+    
+}
+
+.but_wrap {
+    float: right;
+}
