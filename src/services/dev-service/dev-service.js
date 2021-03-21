@@ -34,9 +34,21 @@ export default class DevService {
         return ans
     };
 
+    logout = async (data) => {
+
+        return await this.getDataFromURL('http://localhost:3001/logout') 
+
+    }
+
     authorization = async (data) => {
 
         return await this.getDataFromURL('http://localhost:3001/login', {}, true, data)
+
+    }
+
+    registration = async (data) => {
+
+        return await this.getDataFromURL('http://localhost:3001/registration', data)
 
     }
 

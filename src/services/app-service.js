@@ -50,4 +50,12 @@ export default class AppService {
         return this.appservice.authorization(data)
     }
 
+    registration(data) {
+        return this.appservice.registration(data)
+    }
+
+    logout() {
+        return this.appservice.logout()
+    }
+
 }

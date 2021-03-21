@@ -1,5 +1,6 @@
 .toast__mod {
-    flex-basis: 270px !important;
+    flex-basis: 215px !important;
+    align-self: center;
 }
 
 .form__mod {
@@ -9,9 +10,20 @@
 .enter {
     width: 100px !important;
     height: 35px !important;
-    
+    float: right;
+}
+
+.reg {
+    width: 100px !important;
+    height: 35px !important;
+    float: left;
 }
 
 .but_wrap {
-    float: right;
+    width: 100%;
+    height: 40px;
+}
+
+.message__mod {
+    margin-top: 10px;
 }
