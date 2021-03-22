@@ -29,7 +29,8 @@ export default class Main extends React.Component {
         reports: [],
         loaded_report: false,
         isAutorizated: true,
-        registrationOk: false
+        registrationOk: false,
+        userID: -1
     }
 
     pad = function (num) { return ('00' + num).slice(-2) }
@@ -54,14 +55,14 @@ export default class Main extends React.Component {
     }
 
     closeMessage = () => {
-        this.setState( {registrationOk: false} )
+        this.setState({ registrationOk: false })
     }
 
     registrate = (data) => {
         console.log(data)
         new AppService('dev').registration(data).then((res) => {
             if (res.status === 0) {
-                this.setState({ registrationOk : true })
+                this.setState({ registrationOk: true })
                 return true
             }
             else {
@@ -75,9 +76,14 @@ export default class Main extends React.Component {
     authorizate = (data) => {
         //console.log(data)
         new AppService('dev').authorization(data).then((res) => {
-            //console.log(`*** ${res} ***`)
-            this.setState({ isAutorizated: true })
-            this.loadMainContent()
+            if (res.status === 0) {
+                this.setState({ 
+                    isAutorizated: true,
+                    userID: res.result
+                })
+                this.loadMainContent()
+            }
+            else console.log(res.result)
         })
     }
 
@@ -313,8 +319,8 @@ export default class Main extends React.Component {
 
         return (
             <div className='wrapper'>
-                {!isAutorizated && <Authorization authHandler = {this.authorizate} registrationOk = {registrationOk} regHandler = {this.registrate} closeMessage = {this.closeMessage}/>}
-                {isAutorizated && <Header navDate={this.state.navDate} changeDate={this.changeDate} exit= {this.exit}/>}
+                {!isAutorizated && <Authorization authHandler={this.authorizate} registrationOk={registrationOk} regHandler={this.registrate} closeMessage={this.closeMessage} />}
+                {isAutorizated && <Header navDate={this.state.navDate} changeDate={this.changeDate} exit={this.exit} />}
                 {isAutorizated && mainContent}
                 {isAutorizated && <Footer chandeReportDate={this.chandeReportDate} startDate={reportDateStart} endDate={reportDateEnd} createReport={this.createReport} closeReport={this.closeReport} reportStat={loaded_report} />}
             </div>
