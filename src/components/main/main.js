@@ -30,7 +30,8 @@ export default class Main extends React.Component {
         loaded_report: false,
         isAutorizated: true,
         registrationOk: false,
-        userID: -1
+        userID: -1,
+        authResult: true
     }
 
     pad = function (num) { return ('00' + num).slice(-2) }
@@ -75,6 +76,7 @@ export default class Main extends React.Component {
 
     authorizate = (data) => {
         //console.log(data)
+        this.setState({ authResult : true })
         new AppService('dev').authorization(data).then((res) => {
             if (res.status === 0) {
                 this.setState({ 
@@ -83,7 +85,10 @@ export default class Main extends React.Component {
                 })
                 this.loadMainContent()
             }
-            else console.log(res.result)
+            else {
+                console.log(res.result)
+                this.setState({ authResult : false })
+            }
         })
     }
 
@@ -141,7 +146,7 @@ export default class Main extends React.Component {
         const curdatestrFull = `${navDate.getFullYear()}-${this.pad(navDate.getMonth() + 1)}-${this.pad(navDate.getDate())} ${this.pad(navDate.getHours())}:${this.pad(navDate.getMinutes())}:${this.pad(navDate.getSeconds())}`;
         if (isAutorizated) {
             new AppService('dev').getTemplates().then((res) => {
-                console.log(res)
+                ///console.log(res)
                 if (res.status === 0) {
                     this.setState({
                         task_templates: res.result,
@@ -154,7 +159,7 @@ export default class Main extends React.Component {
             })
 
             new AppService('dev').getTasks({ curDate: curdatestrFull }).then((res) => {
-                console.log(res)
+                ///console.log(res)
                 if (res.status === 0) {
                     this.setState({
                         tasks: res.result,
@@ -167,7 +172,7 @@ export default class Main extends React.Component {
             })
 
             new AppService('dev').getTowns().then((res) => {
-                console.log(res)
+                ///console.log(res)
                 if (res.status === 0) {
                     this.setState({
                         towns: res.result,
@@ -293,7 +298,7 @@ export default class Main extends React.Component {
 
     render() {
 
-        const { task_templates, loaded_templates, loaded_tasks, navDate, towns, loaded_towns, loaded_report, reports, reportDateStart, reportDateEnd, isAutorizated, registrationOk } = this.state
+        const { task_templates, loaded_templates, loaded_tasks, navDate, towns, loaded_towns, loaded_report, reports, reportDateStart, reportDateEnd, isAutorizated, registrationOk, authResult } = this.state
         const isCurDate = (navDate.getFullYear() === new Date().getFullYear() && navDate.getMonth() === new Date().getMonth() && navDate.getDate() === new Date().getDate())
         let mainContent = <Loading />
         if (!loaded_report && loaded_templates && loaded_tasks && loaded_towns)
@@ -319,7 +324,7 @@ export default class Main extends React.Component {
 
         return (
             <div className='wrapper'>
-                {!isAutorizated && <Authorization authHandler={this.authorizate} registrationOk={registrationOk} regHandler={this.registrate} closeMessage={this.closeMessage} />}
+                {!isAutorizated && <Authorization authHandler={this.authorizate} registrationOk={registrationOk} regHandler={this.registrate} closeMessage={this.closeMessage} authResult = {authResult}/>}
                 {isAutorizated && <Header navDate={this.state.navDate} changeDate={this.changeDate} exit={this.exit} />}
                 {isAutorizated && mainContent}
                 {isAutorizated && <Footer chandeReportDate={this.chandeReportDate} startDate={reportDateStart} endDate={reportDateEnd} createReport={this.createReport} closeReport={this.closeReport} reportStat={loaded_report} />}

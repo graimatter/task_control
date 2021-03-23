@@ -47,7 +47,20 @@ export default class Authorization extends React.Component {
 
     registration = () => {
         if (this.checkData()) {
-            if (this.props.regHandler({ fio: this.state.fio, userpass: btoa(`${this.state.name}:${this.state.pass}`) })) {
+            let pair = ''
+            try {
+                pair = btoa(`${this.state.name}:${this.state.pass}`)
+            }
+            catch {
+                this.setState(
+                    {
+                        isNameCorrect: false,
+                        isPassCorrect: false
+                    }
+                )
+                return
+            }
+            if (this.props.regHandler({ fio: this.state.fio, userpass: pair })) {
                 this.setState({
                     name: '',
                     pass: '',
@@ -74,8 +87,20 @@ export default class Authorization extends React.Component {
     }
 
     login = () => {
-
-        this.props.authHandler(btoa(`${this.state.name}:${this.state.pass}`))
+        let pair = ''
+            try {
+                pair = btoa(`${this.state.name}:${this.state.pass}`)
+            }
+            catch {
+                this.setState(
+                    {
+                        isNameCorrect: false,
+                        isPassCorrect: false
+                    }
+                )
+                return
+            }
+        this.props.authHandler(pair)
     }
 
     turnReg = () => {
@@ -89,7 +114,9 @@ export default class Authorization extends React.Component {
     }
 
     inputNameHandler = (e) => {
-        this.setState({ name: e.target.value })
+        //const reg = /^\w+$/i
+        //if (reg.test(e.target.value))
+            this.setState({ name: e.target.value })
     }
 
     inputFIOHandler = (e) => {
@@ -97,7 +124,9 @@ export default class Authorization extends React.Component {
     }
 
     inputPassHandler = (e) => {
-        this.setState({ pass: e.target.value })
+        //const reg = /^\w+$/i
+        //if (reg.test(e.target.value))
+            this.setState({ pass: e.target.value })
     }
 
     confirmPassHandler = (e) => {
@@ -107,7 +136,7 @@ export default class Authorization extends React.Component {
     render() {
 
         const { name, pass, login, fio, pass1, isFIOCorrect, isPassCorrect, isNameCorrect } = this.state
-        const { registrationOk } = this.props
+        const { registrationOk, authResult } = this.props
 
         let fioStyle = 'form-control'
         if (!isFIOCorrect) fioStyle = 'form-control is-invalid'
@@ -155,16 +184,23 @@ export default class Authorization extends React.Component {
                         </div>
                     }
                     {!login && !registrationOk &&
-                    <div className='but_wrap'>
+                        <div className='but_wrap'>
 
-                        <button type='button' className='btn btn-primary btn-sm enter' onClick={this.registration} >Отправить</button>
+                            <button type='button' className='btn btn-primary btn-sm enter' onClick={this.registration} >Отправить</button>
 
-                    </div>
+                        </div>
+                    }
+                    {
+                        !authResult && login &&
+                        <div class="alert alert-dismissible alert-danger message__mod">
+
+                            <strong>Неверный логин или пароль</strong>
+                        </div>
                     }
                     {
                         registrationOk &&
                         <div class="alert alert-dismissible alert-success message__mod">
-                            
+
                             <strong>Регистрация выполнена!</strong> Сообщите администартору ваше ФИО для активации.
                         </div>
                     }
