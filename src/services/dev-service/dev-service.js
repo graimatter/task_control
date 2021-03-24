@@ -1,5 +1,7 @@
+import {ItemTypes} from '../../components/constants/constants'
 export default class DevService {
 
+    domain = (req) => `${ItemTypes.PATH}/${req}`
 
     getDataFromURL = async (url, inputdata , auth = false, token = '') => {
 
@@ -36,49 +38,49 @@ export default class DevService {
 
     logout = async (data) => {
 
-        return await this.getDataFromURL('http://localhost:3001/logout') 
+        return await this.getDataFromURL(this.domain('logout')) 
 
     }
 
     authorization = async (data) => {
 
-        return await this.getDataFromURL('http://localhost:3001/login', {}, true, data)
+        return await this.getDataFromURL(this.domain('login'), {}, true, data)
 
     }
 
     registration = async (data) => {
 
-        return await this.getDataFromURL('http://localhost:3001/registration', data)
+        return await this.getDataFromURL(this.domain('registration'), data)
 
     }
 
     saveTaskTemplate = async (template) => {
 
-        return await this.getDataFromURL('http://localhost:3001/createTemplate', template)
+        return await this.getDataFromURL(this.domain('createTemplate'), template)
 
     }
 
     getTemplates = async () => {
 
-        return await this.getDataFromURL('http://localhost:3001/getAllTemplates')
+        return await this.getDataFromURL(this.domain('getAllTemplates'))
 
     }
 
     getTowns = async () => {
 
-        return await this.getDataFromURL('http://localhost:3001/getAllTowns')
+        return await this.getDataFromURL(this.domain('getAllTowns'))
 
     }
 
     reportTasksDays = async (dates) => {
 
-        return await this.getDataFromURL('http://localhost:3001/reportTasksDays', dates)
+        return await this.getDataFromURL(this.domain('reportTasksDays'), dates)
 
     }
 
     getTasks = async (curDate) => {
 
-        return await this.getDataFromURL('http://localhost:3001/getAllTasks', curDate)
+        return await this.getDataFromURL(this.domain('getAllTasks'), curDate)
 
     }
 
@@ -136,7 +138,7 @@ export default class DevService {
 
     createNewTask = async (task) => {
 
-        return await this.getDataFromURL('http://localhost:3001/createNewTask', task)
+        return await this.getDataFromURL(this.domain('createNewTask'), task)
 
         /*let ans = {}
 
@@ -165,7 +167,7 @@ export default class DevService {
 
     actionsFromTask = async (taskinfo) => {
 
-        return await this.getDataFromURL('http://localhost:3001/controllTask', taskinfo)
+        return await this.getDataFromURL(this.domain('controllTask'), taskinfo)
 
         /*let ans = {}
 

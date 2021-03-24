@@ -156,23 +156,23 @@ export default class Authorization extends React.Component {
                 <div className='toast-body'>
                     {!login && !registrationOk &&
                         <div className='form-group has-danger form__mod'>
-                            <input type='text' value={fio} className={fioStyle} id='inputValid' onChange={this.inputFIOHandler} autocomplete='off' placeholder='ФИО' />
+                            <input type='text' value={fio} className={fioStyle} id='inputValid' onChange={this.inputFIOHandler} autoComplete='off' placeholder='ФИО' />
                         </div>
                     }
                     {!registrationOk &&
                         <div className='form-group has-danger form__mod'>
-                            <input type='text' value={name} className={nameStyle} id='inputValid' onChange={this.inputNameHandler} autocomplete='off' placeholder='Имя пользователя' />
+                            <input type='text' value={name} className={nameStyle} id='inputValid' onChange={this.inputNameHandler} autoComplete='off' placeholder='Имя пользователя' />
                         </div>
                     }
                     {!registrationOk &&
                         <div className='form-group has-danger form__mod'>
-                            <input type='password' value={pass} className={passStyle} id='exampleInputPassword1' onChange={this.inputPassHandler} autocomplete='off' placeholder='Пароль' />
+                            <input type='password' value={pass} className={passStyle} id='exampleInputPassword1' onChange={this.inputPassHandler} autoComplete='off' placeholder='Пароль' />
 
                         </div>
                     }
                     {!login && !registrationOk &&
                         <div className='form-group has-danger form__mod'>
-                            <input type='password' value={pass1} className={passStyle} id='exampleInputPassword1' onChange={this.confirmPassHandler} autocomplete='off' placeholder='Пароль еще раз' />
+                            <input type='password' value={pass1} className={passStyle} id='exampleInputPassword1' onChange={this.confirmPassHandler} autoComplete='off' placeholder='Пароль еще раз' />
 
                         </div>
                     }
@@ -192,14 +192,14 @@ export default class Authorization extends React.Component {
                     }
                     {
                         !authResult && login &&
-                        <div class="alert alert-dismissible alert-danger message__mod">
+                        <div className="alert alert-dismissible alert-danger message__mod">
 
                             <strong>Неверный логин или пароль</strong>
                         </div>
                     }
                     {
                         registrationOk &&
-                        <div class="alert alert-dismissible alert-success message__mod">
+                        <div className="alert alert-dismissible alert-success message__mod">
 
                             <strong>Регистрация выполнена!</strong> Сообщите администартору ваше ФИО для активации.
                         </div>
