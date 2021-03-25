@@ -36,13 +36,13 @@ export default class Footer extends React.Component {
             <nav className='navbar navbar-expand-lg navbar-dark bg-primary footer'>
                 <div className='navDate'>
                     <div className='margin_mod'>
-                        <h6 className='date-title'>Отчет с:</h6>
+                        <h6 className='date-title text-white'>Отчет с:</h6>
                     </div>
                     <div className='margin_mod'>
                         <DatePicker customInput={<input type='text' className='form-control'></input>} selected={this.props.startDate} onChange={this.changeStartDate} />
                     </div>
                     <div className='margin_mod'>
-                        <h6 className='date-title'>по:</h6>
+                        <h6 className='date-title text-white'>по:</h6>
                     </div>
                     <div className='margin_mod'>
                         <DatePicker customInput={<input type='text' className='form-control'></input>} selected={this.props.endDate} onChange={this.changeEndDate} />

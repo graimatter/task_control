@@ -8,7 +8,7 @@ export default class Report extends React.Component {
 
     toDate = (fromdate) => {
         const dateparts = fromdate.split(' ', 1)[0].split('-')
-        console.log(dateparts)
+        //console.log(dateparts)
         return `${dateparts[2]}.${dateparts[1]}.${dateparts[0]}`
     }
 

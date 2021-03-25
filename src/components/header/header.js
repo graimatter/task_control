@@ -6,27 +6,32 @@ import './header.css'
 export default class Header extends React.Component {
 
     state = {
-        navDate : this.props.navDate
+        navDate: this.props.navDate
     }
 
     changeDate = (date) => {
-        this.setState({ navDate: date})
+        this.setState({ navDate: date })
         this.props.changeDate(date)
     }
 
     exitHandles = () => {
         this.props.exit()
     }
-    
+
     render() {
-        
+
         return (
 
             <nav className='navbar navbar-expand-lg navbar-dark bg-primary header'>
-                <div className='navDate'>
-                    <DatePicker customInput = {<input type='text' className='form-control'></input>} selected={this.state.navDate} onChange={this.changeDate}/>
+                <div className='navbar_wrap'>
+                    <div className='navbar-brand'> {this.props.fio} </div>
+                    <div className='navDate'>
+                        <DatePicker customInput={<input type='text' className='form-control'></input>} selected={this.state.navDate} onChange={this.changeDate} />
+                    </div>
+                    <div>
+                        <button type='button' className='btn btn-warning btn-sm' onClick={this.exitHandles} >Выход</button>
+                    </div>
                 </div>
-                <button type='button' className='btn btn-warning btn-sm' onClick = {this.exitHandles} >Выход</button>
             </nav>
 
         )

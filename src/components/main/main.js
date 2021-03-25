@@ -30,7 +30,7 @@ export default class Main extends React.Component {
         loaded_report: false,
         isAutorizated: true,
         registrationOk: false,
-        userID: -1,
+        userID: '',
         authResult: true
     }
 
@@ -41,16 +41,17 @@ export default class Main extends React.Component {
     }
 
     exit = () => {
-        console.log('exit')
+        //console.log('exit')
         new AppService('dev').logout().then((res) => {
-            console.log(res)
+            //console.log(res)
             if (res.status === 0) {
                 this.setState({
                     isAutorizated: false
                 })
+                localStorage.removeItem('fio')
             }
             else {
-                console.log('error')
+                console.log(res.status)
             }
         })
     }
@@ -84,6 +85,7 @@ export default class Main extends React.Component {
                     isAutorizated: true,
                     userID: res.result
                 })
+                localStorage.setItem('fio', res.result)
                 this.loadMainContent()
             }
             else {
@@ -102,7 +104,7 @@ export default class Main extends React.Component {
             reportDateEnd: `${dateEnd.getFullYear()}-${this.pad(dateEnd.getMonth() + 1)}-${this.pad(dateEnd.getDate())} 23:59:59`
         }
         new AppService('dev').reportTasksDays(dates).then((res) => {
-            console.log(res)
+            //console.log(res)
             if (res.status === 0) {
                 this.setState({
                     reports: res.result,
@@ -118,7 +120,7 @@ export default class Main extends React.Component {
     }
 
     changeTown = (townId, index, town_title) => {
-        console.log(townId, index)
+        //console.log(townId, index)
         const newTasks = [...this.state.tasks]
         newTasks[index].town_id = townId
         newTasks[index].town_title = town_title
@@ -185,6 +187,9 @@ export default class Main extends React.Component {
     }
 
     componentDidMount() {
+        if(localStorage.getItem('fio') !== undefined) {
+            this.setState( {userID : localStorage.getItem('fio')} )
+        }
         this.loadMainContent()
 
     }
@@ -269,7 +274,8 @@ export default class Main extends React.Component {
 
             case 'save':
                 new AppService('dev').actionsFromTask({ id: item.id, description: item.description, town_id: item.town_id, action: 'save' }).then((res) => {
-                    console.log(res)
+                    if(res.status !== 0) console.log(res.result)
+                    //console.log(res)
                     //newTasks[item.index].town_id = item.town_id
                     //newTasks[item.index].description = item.description
                     //newTasks.sort((a, b) => b.status - a.status)
@@ -284,7 +290,7 @@ export default class Main extends React.Component {
     changeDate = (date) => {
         const curdatestrFull = `${date.getFullYear()}-${this.pad(date.getMonth() + 1)}-${this.pad(date.getDate())} ${this.pad(date.getHours())}:${this.pad(date.getMinutes())}:${this.pad(date.getSeconds())}`;
         new AppService('dev').getTasks({ curDate: curdatestrFull }).then((res) => {
-            console.log(res)
+            //console.log(res)
             if (res.status === 0) {
                 this.setState({
                     navDate: date,
@@ -324,7 +330,7 @@ export default class Main extends React.Component {
         return (
             <div className='wrapper'>
                 {!isAutorizated && <Authorization authHandler={this.authorizate} registrationOk={registrationOk} regHandler={this.registrate} closeMessage={this.closeMessage} authResult={authResult} />}
-                {isAutorizated && <Header navDate={this.state.navDate} changeDate={this.changeDate} exit={this.exit} />}
+                {isAutorizated && <Header navDate={this.state.navDate} fio={this.state.userID} changeDate={this.changeDate} exit={this.exit} />}
                 {isAutorizated && mainContent}
                 {isAutorizated && <Footer chandeReportDate={this.chandeReportDate} startDate={reportDateStart} endDate={reportDateEnd} createReport={this.createReport} closeReport={this.closeReport} reportStat={loaded_report} />}
             </div>

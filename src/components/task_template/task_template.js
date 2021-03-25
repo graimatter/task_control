@@ -4,11 +4,7 @@ import { DragSource } from 'react-dnd'
 import './task_template.css'
 
 const TemplateSource = {
-    /*canDrag(props) {
-      
-      return props.isReady
-    },*/
-
+   
     isDragging(props, monitor) {
      
       return monitor.getItem().id === props.template_index
@@ -23,16 +19,6 @@ const TemplateSource = {
         return item
     },
 
-    /*endDrag(props, monitor, component) {
-        if (!monitor.didDrop()) {
-
-            return
-        }
-
-        //const item = monitor.getItem()
-        //const dropResult = monitor.getDropResult()
-        //TemplateActions.moveTemplate(item.id, dropResult.listId)
-    }*/
 }
 
 function collect(connect, monitor) {
@@ -54,7 +40,7 @@ class TaskTemplate extends React.Component {
 
             <div className='alert alert-dismissible alert-success' isDragging={this.props.isDragging}>
                 <button type='button' className='close' data-dismiss='alert' onClick={this.deleteTemplate}>&times;</button>
-                <strong className='unselectable'>{this.props.template.title}</strong>
+                <strong className='unselectable'><small>{this.props.template.title}</small></strong>
             </div>
 
         )

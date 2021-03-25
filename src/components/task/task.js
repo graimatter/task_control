@@ -8,10 +8,6 @@ import './task.css'
 export default class Task extends React.Component {
 
 
-    /*state = {
-        desc: this.props.task.description
-    }*/
-
     pad = function (num) { return ('00' + num).slice(-2) }
 
     DurationToStr(diffsec) {
@@ -47,7 +43,7 @@ export default class Task extends React.Component {
     }
 
     render() {
-        let task_style = 'task-item '
+
         let main_but = ''
         let close_but = <ButClose buttonEvent={this.clickButton} />
         let task_duration = this.DurationToStr(this.props.task.duration)
@@ -56,26 +52,34 @@ export default class Task extends React.Component {
         }
         if (this.props.task.status === 2) {
             main_but = <ButPause buttonEvent={this.clickButton} />
-            task_style = 'task-item task_active'
             task_duration = ''
         }
         if (this.props.task.status === 0) {
             close_but = ''
         }
 
-        console.log(`${this.props.task.town_id}  ${this.props.task.town_title}`)
+        let task_style = 'task-item'
+        if (this.props.index % 2 === 0)
+            task_style = 'task-item table-active'
+
+        //console.log(`${this.props.task.town_id}  ${this.props.task.town_title}`)
 
         let selectValue = this.props.task.town_title || 'Не выбран участок...'
 
-        let colorForSelect = 'form-control input__mod'
-        if (this.props.task.town_id === -1) colorForSelect = 'form-control input__mod not__choose'
+        let colorForSelect = 'form-control select__mod'
+        if (this.props.task.town_id === -1) colorForSelect = 'form-control select__mod not__choose'
 
         return (
 
             <div className={task_style} >
-                <div className='task-title' >{this.props.task.title}</div>
+
+                <div className='task-title' ><small>{this.props.task.title}</small></div>
+
                 <div className='task-time' >{this.props.task.time_start}</div>
-                <div className='task-time' >{task_duration}</div>
+                {this.props.task.status === 2 ?
+                    <div className='task-time table-success' >в работе</div> :
+                    <div className='task-time ' >{task_duration}</div>
+                }
                 <div className='task-description'>
                     <input className='form-control input__mod' placeholder='Описание...' value={this.props.task.description} onChange={this.changeTaskDesc}></input>
                 </div>
@@ -85,7 +89,7 @@ export default class Task extends React.Component {
                         <option disabled selected>Не выбран участок...</option>
                         {
                             this.props.towns.map((item, index) => {
-                                return (item.isfilial === 0 ? <option >{item.town_title}</option> : <option className='isfilial' disabled>{item.town_title}</option>)
+                                return (item.isfilial === 0 ? <option key={index}>{item.town_title}</option> : <option key={index} className='isfilial' disabled>{item.town_title}</option>)
                             })
                         }
                     </select>
