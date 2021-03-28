@@ -31,10 +31,15 @@ export default class Main extends React.Component {
         isAutorizated: true,
         registrationOk: false,
         userID: '',
-        authResult: true
+        authResult: true,
+        isAll: false
     }
 
     pad = function (num) { return ('00' + num).slice(-2) }
+
+    showAllHandle = () => {
+        this.setState({ isAll: !this.state.isAll })
+    }
 
     closeReport = () => {
         this.setState({ loaded_report: false })
@@ -187,8 +192,8 @@ export default class Main extends React.Component {
     }
 
     componentDidMount() {
-        if(localStorage.getItem('fio') !== undefined) {
-            this.setState( {userID : localStorage.getItem('fio')} )
+        if (localStorage.getItem('fio') !== undefined) {
+            this.setState({ userID: localStorage.getItem('fio') })
         }
         this.loadMainContent()
 
@@ -202,10 +207,21 @@ export default class Main extends React.Component {
     }
 
     deleteTemplateHander = (index, id) => {
-        new AppService('dev').deleteTemplateById(id).then((res) => {
-            const new_templates = this.state.task_templates
-            new_templates.splice(index, 1)
-            this.setState({ task_templates: new_templates })
+        let active = this.state.task_templates[index].active === 0 ? 1 : 0
+        new AppService('dev').deleteTemplateById({ id: id, active: active }).then((res) => {
+            if (res.status === 0) {
+                const new_templates = [...this.state.task_templates]
+                console.log(this.state.task_templates)
+                const new_item = {
+                    id: new_templates[index].id,
+                    title: new_templates[index].title,
+                    active: active
+                }
+                new_templates[index] = new_item
+                /*if (!this.state.isAll)
+                    new_templates.splice(index, 1)*/
+                this.setState({ task_templates: new_templates })
+            }
         })
 
     }
@@ -274,7 +290,7 @@ export default class Main extends React.Component {
 
             case 'save':
                 new AppService('dev').actionsFromTask({ id: item.id, description: item.description, town_id: item.town_id, action: 'save' }).then((res) => {
-                    if(res.status !== 0) console.log(res.result)
+                    if (res.status !== 0) console.log(res.result)
                     //console.log(res)
                     //newTasks[item.index].town_id = item.town_id
                     //newTasks[item.index].description = item.description
@@ -303,7 +319,7 @@ export default class Main extends React.Component {
 
     render() {
 
-        const { task_templates, loaded_templates, loaded_tasks, navDate, towns, loaded_towns, loaded_report, reports, reportDateStart, reportDateEnd, isAutorizated, registrationOk, authResult } = this.state
+        const { task_templates, loaded_templates, loaded_tasks, navDate, towns, loaded_towns, loaded_report, reports, reportDateStart, reportDateEnd, isAutorizated, registrationOk, authResult, isAll } = this.state
         const isCurDate = (navDate.getFullYear() === new Date().getFullYear() && navDate.getMonth() === new Date().getMonth() && navDate.getDate() === new Date().getDate())
         let mainContent = <Loading />
         if (!loaded_report && loaded_templates && loaded_tasks && loaded_towns)
@@ -311,12 +327,21 @@ export default class Main extends React.Component {
                 <div className='main'>
                     <WorkArea tasks={this.state.tasks} towns={towns} newTask={this.newTaskHandler} buttonsHandler={this.buttonsHandler} changeDesc={this.changeDescription} changeTown={this.changeTown} isCurDate={isCurDate} />
                     <div className='new-task'>
-
-                        <CreateTask createHandler={this.newTemplateHandler} />
+                        {/*
+                            <CreateTask createHandler={this.newTemplateHandler} />
+                            */
+                        }
+                        <div className='form-group'>
+                            <div className='custom-control custom-switch'>
+                                <input type='checkbox' className='custom-control-input' id='customSwitch1' checked={isAll} onChange={this.showAllHandle} />
+                                <label className='custom-control-label' htmlFor='customSwitch1'>Показать все</label>
+                            </div>
+                        </div>
                         <div className='template-list'>
                             {isCurDate &&
                                 task_templates.map((item, index) => {
-                                    return (<TaskTemplate key={index} template={item} template_index={index} deleteHandler={this.deleteTemplateHander} />)
+                                    if ((!isAll && item.active === 1) || isAll)
+                                        return (<TaskTemplate key={index} template={item} template_index={index} deleteHandler={this.deleteTemplateHander} />)
                                 })
                             }
                         </div>

@@ -36,6 +36,12 @@ export default class DevService {
         return ans
     };
 
+    deleteTemplateById = async (data) => {
+
+        return await this.getDataFromURL(this.domain('deleteTemplate'),data) 
+
+    }
+
     logout = async (data) => {
 
         return await this.getDataFromURL(this.domain('logout')) 
